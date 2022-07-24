@@ -42,6 +42,14 @@ uint32_t NString::indexOf(char c){
     return -1;
 }
 
+uint32_t NString::count(char c){
+    uint32_t count = 0;
+    for(int i = 0; i < this->len; i++){
+        if(this->string[i] == c) count++;
+    }
+    return count;
+}
+
 bool NString::contains(char* sub){
     for(int i = 0; i < this->len - strlen(sub); i++){
         if(strcmp(&(this->string[i]), sub) == 0) return true;
