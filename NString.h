@@ -1,34 +1,50 @@
 //The best string library
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
+
+
+
 class NString{
 
 private:
     char* string;
+    uint32_t len; 
 
 public:
-    NString(char* string);
-    NString(char* string, bool deep);
     NString(const char* string);
+    NString(char* string, bool shallow);
+    //Copy Constructor
     NString(const NString& string);
+    //Move Constructor
+    NString(NString&& other) noexcept;
     ~NString();
 
-    int length();
-    int indexOf(char c);
+    uint32_t length();
+    uint32_t indexOf(char c);
+    uint32_t count(char c);
     bool contains(char* sub);
     NString substring(int start, int end);
     
+    
+
+    //Copy Assignment
     NString& operator=(const NString& string);
+    //Move Assignment
+    NString& operator=(NString&& other) noexcept;
+    
+    operator const char* ();
     NString operator+(NString string);
     NString operator*(int n);
     bool operator==(NString string);
     char operator[](int index);
     friend std::ostream& operator<<(std::ostream& os, NString& string);
+    friend std::ostream& operator<<(std::ostream& os, NString&& string);
+    
 
     //TODO
     std::vector<NString> split(NString string);
     bool contains(NString string);
-    int count(char c);
-    int count(char* string);
+    uint32_t count(char* string);
 };
