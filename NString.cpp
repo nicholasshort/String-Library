@@ -2,20 +2,16 @@
 
 
 NString::NString(const char* string){
-    this->string = new char[strlen(string)+1];
-    strcpy(this->string, string);
     this->len = strlen(string);
-}
-
-NString::NString(char* string, bool shallow){
-    this->string = string;
-    this->len = strlen(this->string);
+    this->string = new char[this->len];
+    memcpy(this->string, string, len);
+    
 }
 
 NString::NString(const NString& string){
-    this->string = new char[string.len+1];
-    strcpy(this->string, string.string);
     this->len = string.len;
+    this->string = new char[string.len];
+    memcpy(this->string, string.string, this->len);
 }
 
 NString::NString(NString&& other) noexcept{
@@ -50,39 +46,14 @@ uint32_t NString::count(char c){
     return count;
 }
 
-bool NString::contains(char* sub){
-    for(int i = 0; i < this->len - strlen(sub); i++){
-        if(strcmp(&(this->string[i]), sub) == 0) return true;
-    }
-    return false;
-}
 
 NString NString::substring(int start, int end){
-    char* s = new char[end-start+2];
-    memcpy(s, &(this->string[start]), end-start+1);
-    s[end-start+1] = '\0'; 
-    return NString(s, true);
+    char* newString = new char[end-start+1];
+    memcpy(newString, &(this->string[start]), end-start+1);
+    newString[end-start+1] = '\0'; 
+    return NString(newString);
 }
 
-std::vector<NString> NString::split(NString string){
-    std::vector<NString> splitString;
-    
-    int activeStringIndex = 0;
-    char* activeString = new char[this->len+1];
-
-    char* buffer = new char[string.len+1];
-    
-    for(int i = 0; i < (this->len - string.len); i++){
-        memcpy(buffer, &(this->string[i]), string.len);
-        buffer[string.len] = '\0';
-        if(strcmp(buffer, string.string) == 0){
-            
-        }
-    }
-
-    return splitString;
-
-}
 
 NString::operator const char* () {
 	return string;
@@ -97,15 +68,21 @@ NString& NString::operator=(const NString& string){
     }
 
     delete[] this->string;
-    this->string = new char[string.len+1];
-    strcpy(this->string, string.string);
+    this->string = new char[string.len];
+    memcpy(this->string, string.string, string.len);
     return *this;
 }
 
-
+//Move assignment
 NString& NString::operator=(NString&& other) noexcept{
-    delete[] this->string;
-    this->string = other.string;
+
+    if(this == &other) {
+        this->len = 0;
+        delete[] this->string;
+        this->string = other.string;
+        this->len = other.len;
+    }
+
     return *this;
 }
 
@@ -114,20 +91,20 @@ char NString::operator[](int index){
 }
 
 NString NString::operator+(NString string){
-    char* newString = new char[this->len + string.len + 1];
+    char* newString = new char[this->len + string.len];
     newString[0] = '\0';
     strcat(newString, this->string);
     strcat(newString, string.string);
-    return NString(newString, true);
+    return NString(newString);
 }
 
 NString NString::operator*(int n){
-    char* newString = new char[this->len * n + 1];
+    char* newString = new char[this->len * n];
     newString[0] = '\0';
     for(int i = 0; i < n; i++){
         strcat(newString, this->string);
     }
-    return NString(newString, true);
+    return NString(newString);
 }
 
 bool NString::operator==(NString string){

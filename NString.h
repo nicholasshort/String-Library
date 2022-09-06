@@ -2,9 +2,9 @@
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
-#include <vector>
 
-
+#ifndef NSTRING_H
+#define NSTRING_H
 
 class NString{
 
@@ -14,7 +14,6 @@ private:
 
 public:
     NString(const char* string);
-    NString(char* string, bool shallow);
     //Copy Constructor
     NString(const NString& string);
     //Move Constructor
@@ -24,10 +23,7 @@ public:
     uint32_t length();
     uint32_t indexOf(char c);
     uint32_t count(char c);
-    bool contains(char* sub);
     NString substring(int start, int end);
-    
-    
 
     //Copy Assignment
     NString& operator=(const NString& string);
@@ -41,10 +37,7 @@ public:
     char operator[](int index);
     friend std::ostream& operator<<(std::ostream& os, NString& string);
     friend std::ostream& operator<<(std::ostream& os, NString&& string);
-    
 
-    //TODO
-    std::vector<NString> split(NString string);
-    bool contains(NString string);
-    uint32_t count(char* string);
 };
+
+#endif
